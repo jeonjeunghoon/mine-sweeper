@@ -71,8 +71,6 @@ const S = {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 200px;
     padding: 20px;
 
     border-radius: 8px;

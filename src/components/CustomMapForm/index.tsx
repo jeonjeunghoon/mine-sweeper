@@ -1,5 +1,3 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-
 import styled from "@emotion/styled";
 
 import { useDispatch } from "react-redux";
@@ -10,47 +8,8 @@ import {
   setCustomMap,
 } from "../../store/game/slice";
 
-type Args = {
-  initialValues: Record<string, string>;
-  initializedErrors: Record<string, string> | null;
-  submitForm: () => void;
-  validateInput: (values: Record<string, string>) => Record<string, string>;
-};
-
-const useForm = ({
-  initialValues,
-  initializedErrors,
-  submitForm,
-  validateInput,
-}: Args) => {
-  const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState(initializedErrors);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValues = {
-      ...values,
-      [event.target.name]: event.target.value,
-    };
-
-    const newErrors = validateInput(newValues);
-
-    if (Object.values(newErrors).some((error) => error !== "")) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors(initializedErrors);
-    setValues(newValues);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    submitForm();
-  };
-
-  return { values, errors, handleChange, handleSubmit };
-};
+import { validators } from "../../utils/validators";
+import { useForm } from "../../hooks/useForm";
 
 type Props = {
   closeMenu: () => void;
@@ -58,74 +17,35 @@ type Props = {
 
 export default function CustomMapForm({ closeMenu }: Props) {
   const dispatch = useDispatch();
-  const initialValues = {
-    width: "",
-    height: "",
-    numberOfMine: "",
-  };
-  const initializedErrors = {
-    width: "",
-    height: "",
-    numberOfMine: "",
-  };
-  const { values, errors, handleChange, handleSubmit } = useForm({
-    initialValues,
-    initializedErrors,
-    submitForm: () => {
-      dispatch(
-        setCustomMap({
-          customMap: (values as CustomMap) ?? {
-            width: "8",
-            height: "8",
-            numberOfMine: "10",
-          },
-        })
-      );
-      dispatch(resetMap());
-      dispatch(changeGameState({ state: "pause" }));
-      closeMenu();
-    },
-    validateInput: (values: Record<string, string>): Record<string, string> => {
-      const { width, height, numberOfMine } = values;
-
-      if (width) {
-        if (!/^\d+$/.test(width)) {
-          initializedErrors.width = "숫자만 입력해 주세요";
-        }
-
-        if (width && Number(values.width) > 100) {
-          initializedErrors.width = "100 이하의 숫자를 입력해 주세요";
-        }
-      }
-
-      if (height) {
-        if (!/^\d+$/.test(height)) {
-          initializedErrors.height = "숫자만 입력해 주세요";
-        }
-
-        if (Number(values.height) > 100) {
-          initializedErrors.height = "100 이하의 숫자를 입력해 주세요";
-        }
-      }
-
-      if (numberOfMine) {
-        if (!/^\d+$/.test(numberOfMine)) {
-          initializedErrors.numberOfMine = "숫자만 입력해 주세요";
-        }
-
-        if (
-          Number(values.numberOfMine) >
-          Math.floor((Number(width) * Number(height)) / 3)
-        ) {
-          initializedErrors.numberOfMine = `${Math.floor(
-            (Number(width) * Number(height)) / 3
-          )}개 이하의 숫자를 입력해 주세요`;
-        }
-      }
-
-      return initializedErrors;
-    },
-  });
+  const { values, inputErrors, formError, handleChange, handleSubmit } =
+    useForm({
+      initialValues: {
+        width: "",
+        height: "",
+        numberOfMine: "",
+      },
+      initializedErrors: {
+        width: "",
+        height: "",
+        numberOfMine: "",
+      },
+      submitForm: () => {
+        dispatch(
+          setCustomMap({
+            customMap: (values as CustomMap) ?? {
+              width: "8",
+              height: "8",
+              numberOfMine: "10",
+            },
+          })
+        );
+        dispatch(resetMap());
+        dispatch(changeGameState({ state: "pause" }));
+        closeMenu();
+      },
+      validateInput: validators.input,
+      validateForm: validators.form,
+    });
 
   return (
     <S.Form onSubmit={handleSubmit}>
@@ -133,74 +53,131 @@ export default function CustomMapForm({ closeMenu }: Props) {
         <S.Legend>
           <S.Title>맵의 크기를 설정하세요</S.Title>
         </S.Legend>
-        <S.InputContainer>
+        <S.InputLabelContainer>
           <S.Label htmlFor='width'>너비</S.Label>
-          <S.Input
-            type='text'
-            id='width'
-            name='width'
-            value={values?.width}
-            onChange={handleChange}
-            required
-          />
-          <p>{errors?.width}</p>
-        </S.InputContainer>
-        <S.InputContainer>
+          <S.InputContainer>
+            <S.Input
+              type='text'
+              id='width'
+              name='width'
+              value={values?.width}
+              onChange={handleChange}
+              required
+            />
+            <S.ErrorText>{inputErrors?.width}</S.ErrorText>
+          </S.InputContainer>
+        </S.InputLabelContainer>
+        <S.InputLabelContainer>
           <S.Label htmlFor='height'>높이</S.Label>
-          <S.Input
-            type='text'
-            id='height'
-            name='height'
-            value={values?.height}
-            onChange={handleChange}
-            required
-          />
-          {errors?.height}
-        </S.InputContainer>
-        <S.InputContainer>
+          <S.InputContainer>
+            <S.Input
+              type='text'
+              id='height'
+              name='height'
+              value={values?.height}
+              onChange={handleChange}
+              required
+            />
+            <S.ErrorText>{inputErrors?.height}</S.ErrorText>
+          </S.InputContainer>
+        </S.InputLabelContainer>
+        <S.InputLabelContainer>
           <S.Label htmlFor='numberOfMine'>지뢰의 수</S.Label>
-          <S.Input
-            type='text'
-            id='numberOfMine'
-            name='numberOfMine'
-            value={values?.numberOfMine}
-            onChange={handleChange}
-            required
-          />
-          {errors?.numberOfMine}
-        </S.InputContainer>
+          <S.InputContainer>
+            <S.Input
+              type='text'
+              id='numberOfMine'
+              name='numberOfMine'
+              value={values?.numberOfMine}
+              onChange={handleChange}
+              required
+            />
+            <S.ErrorText>{inputErrors?.numberOfMine}</S.ErrorText>
+          </S.InputContainer>
+        </S.InputLabelContainer>
       </S.Fieldset>
-      <S.Button type='submit'>시작하기</S.Button>
+      <S.ButtonContainer>
+        <S.Button type='submit'>시작하기</S.Button>
+        <S.ErrorText>{formError}</S.ErrorText>
+      </S.ButtonContainer>
     </S.Form>
   );
 }
 
 const S = {
-  Form: styled.form``,
+  Form: styled.form`
+    width: 400px;
+    padding: 20px;
+  `,
 
   Fieldset: styled.fieldset`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+
     border: none;
   `,
 
-  Legend: styled.legend``,
+  Legend: styled.legend`
+    width: 100%;
+    margin-bottom: 40px;
+  `,
 
-  Title: styled.p``,
+  Title: styled.p`
+    width: 100%;
 
-  Description: styled.p``,
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+  `,
+
+  InputLabelContainer: styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
 
   InputContainer: styled.div`
-    display: flex;
+    width: 260px;
+    height: 32px;
   `,
 
   Label: styled.label`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4px;
-    font-size: 1.2rem;
+
+    font-size: 2rem;
+    font-weight: 500;
   `,
 
-  Input: styled.input``,
+  Input: styled.input`
+    width: 100%;
+    margin-bottom: 4px;
 
-  Button: styled.button``,
+    font-size: 2rem;
+  `,
+
+  ButtonContainer: styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
+
+  Button: styled.button`
+    padding: 12px 20px;
+
+    font-size: 2rem;
+    border-radius: 4px;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-bottom: 2px solid #8b8b8b;
+    border-right: 2px solid #8b8b8b;
+  `,
+
+  ErrorText: styled.p`
+    font-size: 1.6rem;
+    color: red;
+  `,
 };
