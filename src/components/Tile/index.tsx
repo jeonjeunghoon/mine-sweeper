@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Position,
   changeGameState,
-  initialGameMapByClick,
+  checkSuccessCondition,
+  initialMineMapByClick,
   openBlank,
-  setIsMine,
   toggleIsFlag,
   updateMineMapByClickTile,
 } from "../../store/game/slice";
@@ -24,17 +24,24 @@ export default function Tile({
 }: Blank) {
   const dispatch = useDispatch();
   const state = useSelector(gameStateSelector);
+
   const handleBlackClick = (position: Position) => {
+    if (isFlag) return;
+
     if (state === "pause") {
       dispatch(changeGameState({ state: "start" }));
-      dispatch(initialGameMapByClick({ position }));
+      dispatch(initialMineMapByClick({ position }));
       dispatch(updateMineMapByClickTile({ position }));
-    } else {
+      dispatch(checkSuccessCondition());
+    }
+
+    if (state === "start") {
       if (isMine) {
         dispatch(openBlank({ position }));
-        dispatch(setIsMine({ position }));
+        dispatch(changeGameState({ state: "fail" }));
       } else {
         dispatch(updateMineMapByClickTile({ position }));
+        dispatch(checkSuccessCondition());
       }
     }
   };
@@ -44,7 +51,7 @@ export default function Tile({
 
     if (state === "pause") {
       dispatch(changeGameState({ state: "start" }));
-      dispatch(initialGameMapByClick({ position }));
+      dispatch(initialMineMapByClick({ position }));
     }
 
     dispatch(toggleIsFlag({ position }));
@@ -54,15 +61,13 @@ export default function Tile({
     <S.Container>
       {isOpen ? (
         <S.Square>{isMine ? "💣" : numberOfNearMine}</S.Square>
-      ) : isFlag ? (
-        <S.Flag>🚩</S.Flag>
       ) : (
         <S.Blank
           onClick={() => handleBlackClick(position)}
           onContextMenu={renderFlag}
           disabled={state === "success" || state === "fail"}
         >
-          {isMine ? 1 : 0}
+          {isFlag ? "🚩" : isMine ? 1 : 0}
         </S.Blank>
       )}
     </S.Container>
@@ -84,23 +89,21 @@ const S = {
 
     text-align: center;
     border: 1px solid #8b8b8b;
+    cursor: default;
   `,
 
   Blank: styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    border-top: 2px solid white;
-    border-left: 2px solid white;
-    border-bottom: 2px solid #8b8b8b;
-    border-right: 2px solid #8b8b8b;
-  `,
 
-  Flag: styled.div`
-    width: 100%;
-    height: 100%;
     border-top: 2px solid white;
     border-left: 2px solid white;
     border-bottom: 2px solid #8b8b8b;
     border-right: 2px solid #8b8b8b;
+    cursor: ${({ disabled }) => disabled && "default"};
+    font-size: 1.2rem;
   `,
 };

@@ -22,6 +22,8 @@ type MineMap = {
   size: Size;
   map: Blank[][];
   numberOfMine: number;
+  numberOfFlag: number;
+  numberOfOpenedBlank: number;
 };
 
 type State = {
@@ -39,6 +41,8 @@ export const initialState: State = {
       height: 8,
     },
     numberOfMine: 10,
+    numberOfFlag: 0,
+    numberOfOpenedBlank: 0,
     map: initialMineMap(8, 8),
   },
 };

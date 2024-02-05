@@ -1,10 +1,30 @@
 import styled from "@emotion/styled";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changeGameState,
+  resetMap,
+  resetNumberOfFlag,
+  resetNumberOfOpenedBlank,
+} from "../../store/game/slice";
+import { gameStateSelector } from "../../store/game/selector";
 
 export default function ProgressBar() {
+  const dispatch = useDispatch();
+  const state = useSelector(gameStateSelector);
+
+  const resetGame = () => {
+    dispatch(changeGameState({ state: "pause" }));
+    dispatch(resetMap());
+    dispatch(resetNumberOfFlag());
+    dispatch(resetNumberOfOpenedBlank());
+  };
+
   return (
     <S.ProgressBar>
       <S.MineNumber></S.MineNumber>
-      <S.Reset></S.Reset>
+      <S.Reset onClick={resetGame}>
+        {state === "success" ? "😎" : state === "fail" ? "😭" : "🙂"}
+      </S.Reset>
       <S.Timer></S.Timer>
     </S.ProgressBar>
   );
@@ -28,7 +48,10 @@ const S = {
     background-color: black;
   `,
 
-  Reset: styled.div`
+  Reset: styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 28px;
     height: 28px;
 
@@ -36,6 +59,7 @@ const S = {
     border-left: 2px solid white;
     border-bottom: 2px solid #8b8b8b;
     border-right: 2px solid #8b8b8b;
+    font-size: 2rem;
   `,
 
   Timer: styled.div`
