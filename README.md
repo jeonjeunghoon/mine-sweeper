@@ -2,7 +2,7 @@
 
 ## 설치 및 실행 방법
 
-[배포된 지뢰 찾기 사이트](https://65c142910f979f167c21991f--stately-pudding-f09fbc.netlify.app/)
+[배포된 지뢰 찾기 사이트](https://tourmaline-hummingbird-65ccb8.netlify.app/)
 
 ### 패키지 설치
 
