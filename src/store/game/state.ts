@@ -32,10 +32,8 @@ type State = {
   mineMap: MineMap;
 };
 
-export const initialState: State = {
-  level: "Beginner",
-  state: "pause",
-  mineMap: {
+export const MINE_MAP: Record<Level, MineMap> = {
+  Beginner: {
     size: {
       width: 8,
       height: 8,
@@ -45,4 +43,43 @@ export const initialState: State = {
     numberOfOpenedBlank: 0,
     map: initialMineMap(8, 8),
   },
+
+  Intermediate: {
+    size: {
+      width: 16,
+      height: 16,
+    },
+    numberOfMine: 40,
+    numberOfFlag: 0,
+    numberOfOpenedBlank: 0,
+    map: initialMineMap(16, 16),
+  },
+
+  Expert: {
+    size: {
+      width: 32,
+      height: 16,
+    },
+    numberOfMine: 100,
+    numberOfFlag: 0,
+    numberOfOpenedBlank: 0,
+    map: initialMineMap(32, 16),
+  },
+
+  Custom: {
+    size: {
+      width: 8,
+      height: 8,
+    },
+    numberOfMine: 10,
+    numberOfFlag: 0,
+    numberOfOpenedBlank: 0,
+    map: initialMineMap(8, 8),
+  },
+};
+
+export const initialState: State = {
+  level: "Beginner",
+  state: "pause",
+  mineMap: MINE_MAP["Beginner"],
 };

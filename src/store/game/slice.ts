@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { GameState, initialState } from "./state";
+import { GameState, initialState, Level, MINE_MAP } from "./state";
 import { generateMineMap, initialMineMap } from "../../utils/map";
+
+export type CustomMap = {
+  width: string;
+  height: string;
+  numberOfMine: string;
+};
 
 export type Position = {
   row: number;
@@ -105,6 +111,25 @@ export const slice = createSlice({
       if (height * width - numberOfMine - numberOfOpenedBlank === 0)
         state.state = "success";
     },
+
+    changeLevel: (state, action: PayloadAction<{ level: Level }>) => {
+      state.level = action.payload.level;
+      state.mineMap = MINE_MAP[action.payload.level];
+    },
+
+    setCustomMap: (
+      state,
+      action: PayloadAction<{
+        customMap: CustomMap;
+      }>
+    ) => {
+      state.level = "Custom";
+      state.mineMap.size.width = Number(action.payload.customMap.width);
+      state.mineMap.size.height = Number(action.payload.customMap.height);
+      state.mineMap.numberOfMine = Number(
+        action.payload.customMap.numberOfMine
+      );
+    },
   },
 });
 
@@ -118,6 +143,8 @@ export const {
   updateMineMapByClickTile,
   toggleIsFlag,
   checkSuccessCondition,
+  changeLevel,
+  setCustomMap,
 } = slice.actions;
 
 export default slice.reducer;

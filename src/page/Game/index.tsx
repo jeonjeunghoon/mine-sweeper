@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import Menu from "../Menu";
-import ProgressBar from "../ProgressBar";
-import MineMap from "../MineMap";
+
+import Menu from "../../components/Menu";
+import ProgressBar from "../../components/ProgressBar";
+import MineMap from "../../components/MineMap";
 
 export default function Game() {
   return (

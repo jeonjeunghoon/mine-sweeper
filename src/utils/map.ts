@@ -1,7 +1,7 @@
 import { Position } from "../store/game/slice";
 import { Blank, Size } from "../store/game/state";
 
-export const initialMineMap = (height: number, width: number): Blank[][] => {
+export const initialMineMap = (width: number, height: number): Blank[][] => {
   return Array.from({ length: height }, (_, rowIndex) =>
     Array.from({ length: width }, (_, colIndex) => {
       return {

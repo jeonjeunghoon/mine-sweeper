@@ -1,5 +1,5 @@
 import Layout from "./components/Layout";
-import Game from "./components/Game";
+import Game from "./page/Game";
 
 function App() {
   return (

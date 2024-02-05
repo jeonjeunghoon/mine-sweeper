@@ -1,22 +1,21 @@
-import { ComponentProps } from "react";
+import { PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
 
 import styled from "@emotion/styled";
 
-import { useModal } from "../../hooks/useModal";
+import { useModal } from "../../../hooks/useModal";
 
 type TextAlign = "start" | "center" | "end";
 
 type Props = {
   buttonText?: string;
   buttonAlign?: TextAlign;
-} & ComponentProps<"div">;
+} & PropsWithChildren;
 
 export default function Modal({
   buttonText = "모달 창 열기",
   buttonAlign = "center",
   children,
-  ...rest
 }: Props) {
   const { isModalOpen, openModal, closeModal } = useModal();
 
@@ -27,7 +26,7 @@ export default function Modal({
       </S.ModalButton>
       {isModalOpen &&
         createPortal(
-          <S.ModalContainer {...rest}>
+          <S.ModalContainer>
             <S.Background onClick={closeModal} />
             <S.Modal>
               <S.CloseButtonWrapper>
