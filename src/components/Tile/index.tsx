@@ -10,6 +10,7 @@ import {
   openBlank,
   setIsMine,
   toggleIsFlag,
+  updateMineMapByClickTile,
 } from "../../store/game/slice";
 import { gameStateSelector } from "../../store/game/selector";
 import { Blank } from "../../store/game/state";
@@ -25,13 +26,16 @@ export default function Tile({
   const state = useSelector(gameStateSelector);
   const handleBlackClick = (position: Position) => {
     if (state === "pause") {
-      dispatch(initialGameMapByClick({ position }));
       dispatch(changeGameState({ state: "start" }));
-      dispatch(openBlank({ position }));
+      dispatch(initialGameMapByClick({ position }));
+      dispatch(updateMineMapByClickTile({ position }));
     } else {
-      dispatch(openBlank({ position }));
-
-      if (isMine) dispatch(setIsMine({ position }));
+      if (isMine) {
+        dispatch(openBlank({ position }));
+        dispatch(setIsMine({ position }));
+      } else {
+        dispatch(updateMineMapByClickTile({ position }));
+      }
     }
   };
 
@@ -39,8 +43,8 @@ export default function Tile({
     event.preventDefault();
 
     if (state === "pause") {
-      dispatch(initialGameMapByClick({ position }));
       dispatch(changeGameState({ state: "start" }));
+      dispatch(initialGameMapByClick({ position }));
     }
 
     dispatch(toggleIsFlag({ position }));
