@@ -12,10 +12,13 @@ import {
   selectViewNumberOfMine,
 } from "../../store/game/selector";
 
+import { useTimer } from "../../hooks/useTimer";
+
 export default function ProgressBar() {
   const dispatch = useDispatch();
   const state = useSelector(gameStateSelector);
   const viewNumberOfMine = useSelector(selectViewNumberOfMine);
+  const timer = useTimer(state);
 
   const resetGame = () => {
     dispatch(changeGameState({ state: "pause" }));
@@ -26,13 +29,15 @@ export default function ProgressBar() {
 
   return (
     <S.ProgressBar>
-      <S.MineNumber>
+      <S.NumberWrapper>
         <S.Number>{viewNumberOfMine}</S.Number>
-      </S.MineNumber>
+      </S.NumberWrapper>
       <S.Reset onClick={resetGame}>
         {state === "success" ? "😎" : state === "fail" ? "😭" : "🙂"}
       </S.Reset>
-      <S.Timer></S.Timer>
+      <S.NumberWrapper>
+        <S.Number>{timer}</S.Number>
+      </S.NumberWrapper>
     </S.ProgressBar>
   );
 }
@@ -48,11 +53,11 @@ const S = {
     border-right: 2px solid white;
   `,
 
-  MineNumber: styled.div`
+  NumberWrapper: styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
+    width: 54px;
     height: 28px;
 
     background-color: black;
@@ -72,15 +77,8 @@ const S = {
     font-size: 2rem;
   `,
 
-  Timer: styled.div`
-    width: 40px;
-    height: 28px;
-
-    background-color: black;
-  `,
-
   Number: styled.p`
-    font-size: 1.6rem;
+    font-size: 2rem;
     font-weight: 900;
     color: red;
   `,
