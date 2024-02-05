@@ -67,7 +67,7 @@ export default function Tile({
           onContextMenu={renderFlag}
           disabled={state === "success" || state === "fail"}
         >
-          {isFlag ? "🚩" : isMine ? 1 : 0}
+          {isFlag && "🚩"}
         </S.Blank>
       )}
     </S.Container>
@@ -87,6 +87,8 @@ const S = {
     width: 100%;
     height: 100%;
 
+    font-size: 1.2rem;
+    font-weight: 900;
     text-align: center;
     border: 1px solid #8b8b8b;
     cursor: default;
