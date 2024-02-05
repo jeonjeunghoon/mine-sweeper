@@ -55,6 +55,7 @@ const S = {
     transform: translate(-50%, -50%);
 
     overflow: hidden;
+    z-index: 2;
   `,
 
   Background: styled.div`
