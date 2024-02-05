@@ -1,4 +1,6 @@
-const colors = {};
+const colors = {
+  primary: "#c0c0c0",
+};
 
 export type Colors = typeof theme.colors;
 

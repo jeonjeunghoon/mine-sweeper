@@ -8,9 +8,12 @@ export default function Layout({ children }: PropsWithChildren) {
 
 const S = {
   Layout: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
 
     overflow-x: auto;
-    background-color: black;
+    background-color: #0e0e0e;
   `,
 };
