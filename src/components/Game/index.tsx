@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Menu from "../Menu";
 import ProgressBar from "../ProgressBar";
-import Map from "../Map";
+import MineMap from "../MineMap";
 
 export default function Game() {
   return (
@@ -9,7 +9,7 @@ export default function Game() {
       <Menu />
       <S.ContentsContainer>
         <ProgressBar />
-        <Map />
+        <MineMap />
       </S.ContentsContainer>
     </S.Container>
   );

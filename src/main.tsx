@@ -15,12 +15,12 @@ import App from "./App.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider theme={theme}>
-          <Global styles={global} />
-          <App />
-        </ThemeProvider>
-      </PersistGate>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+      <ThemeProvider theme={theme}>
+        <Global styles={global} />
+        <App />
+      </ThemeProvider>
+      {/* </PersistGate> */}
     </Provider>
   </React.StrictMode>
 );
