@@ -23,10 +23,10 @@ export const generateMineMap = (
   numberOfMine: number,
   clickedPosition: Position
 ) => {
-  const { height, width } = size;
+  const { width, height } = size;
   const { row: clickedRow, col: clickedCol } = clickedPosition;
 
-  const mineMap = initialMineMap(height, width);
+  const mineMap = initialMineMap(width, height);
 
   let mine = 0;
   while (mine < numberOfMine) {
@@ -34,35 +34,35 @@ export const generateMineMap = (
     const randomCol = Math.floor(Math.random() * width);
     const isClicked = randomRow === clickedRow && randomCol === clickedCol;
 
-    if (mineMap[randomCol][randomRow].isMine || isClicked) continue;
+    if (mineMap[randomRow][randomCol].isMine || isClicked) continue;
 
-    mineMap[randomCol][randomRow].isMine = true;
+    mineMap[randomRow][randomCol].isMine = true;
     mine++;
   }
 
-  for (let col = 0; col < width; col++) {
-    for (let row = 0; row < height; row++) {
-      if (mineMap[col][row].isMine) continue;
+  for (let row = 0; row < height; row++) {
+    for (let col = 0; col < width; col++) {
+      if (mineMap[row][col].isMine) continue;
 
       let nearMineCount = 0;
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          const newRow = row + dx;
-          const newCol = col + dy;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const newRow = row + dy;
+          const newCol = col + dx;
 
           if (
             newRow >= 0 &&
             newCol >= 0 &&
             newRow < height &&
             newCol < width &&
-            mineMap[newCol][newRow].isMine
+            mineMap[newRow][newCol].isMine
           ) {
             nearMineCount++;
           }
         }
       }
 
-      mineMap[col][row].numberOfNearMine = nearMineCount;
+      mineMap[row][col].numberOfNearMine = nearMineCount;
     }
   }
 

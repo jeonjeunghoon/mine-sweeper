@@ -20,8 +20,8 @@ export const slice = createSlice({
   reducers: {
     resetMap: (state) => {
       state.mineMap.map = initialMineMap(
-        state.mineMap.size.height,
-        state.mineMap.size.width
+        state.mineMap.size.width,
+        state.mineMap.size.height
       );
     },
 
@@ -42,6 +42,8 @@ export const slice = createSlice({
         state.mineMap.numberOfMine,
         action.payload.position
       );
+
+      console.log(state.mineMap.numberOfMine);
     },
 
     openBlank: (state, action: PayloadAction<{ position: Position }>) => {
